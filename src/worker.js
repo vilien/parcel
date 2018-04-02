@@ -11,10 +11,10 @@ exports.init = function(options, callback) {
   callback();
 };
 
-exports.run = async function(path, pkg, options, isWarmUp, callback) {
+exports.run = async function(path, id, pkg, options, isWarmUp, callback) {
   try {
     options.isWarmUp = isWarmUp;
-    var result = await pipeline.process(path, pkg, options);
+    var result = await pipeline.process(path, id, pkg, options);
 
     callback(null, result);
   } catch (err) {
