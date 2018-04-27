@@ -516,7 +516,10 @@ class Bundler extends EventEmitter {
         ) {
           this.moveAssetToBundle(asset, commonBundle);
           return;
-        } else if(bundle.isIsolated && asset.parentBundle.type === commonBundle.type) {
+        } else if (
+          bundle.isolated &&
+          asset.parentBundle.type === commonBundle.type
+        ) {
           bundle.addAsset(asset);
           return;
         }
@@ -535,7 +538,7 @@ class Bundler extends EventEmitter {
       bundle = Bundle.createWithAsset(asset);
     } else if (dep && dep.dynamic) {
       // Create a new bundle for dynamic imports
-      bundle = bundle.createChildBundle(asset);
+      bundle = bundle.createChildBundle(asset, dep);
     } else if (asset.type && !this.packagers.has(asset.type)) {
       // No packager is available for this asset type. Create a new bundle with only this asset.
       bundle.createSiblingBundle(asset);
@@ -576,7 +579,7 @@ class Bundler extends EventEmitter {
     }
 
     for (let bundle of Array.from(asset.bundles)) {
-      if (!bundle.isIsolated) {
+      if (!bundle.isolated) {
         bundle.removeAsset(asset);
       }
       commonBundle.getSiblingBundle(bundle.type).addAsset(asset);
