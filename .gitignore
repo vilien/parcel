@@ -11,7 +11,7 @@ lib
 !test/**/node_modules
 .vscode/
 .idea/
-*.min.js
+#*.min.js
 test/integration/**/target
 test/integration/**/Cargo.lock
 # Logs
