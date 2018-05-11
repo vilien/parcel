@@ -9,6 +9,10 @@ class RawPackager extends Packager {
 
   async addAsset(asset) {
     let contents = asset.generated[asset.type];
+    let bundleName = this.bundle.name;
+    let extname = path.extname(asset.name);
+    let basename = path.basename(asset.name, extname);
+    let patt = new RegExp(`${basename}\\.[0-9a-f]+${extname}`);
     if (!contents || (contents && contents.path)) {
       contents = await fs.readFile(contents ? contents.path : asset.name);
     }
@@ -19,7 +23,19 @@ class RawPackager extends Packager {
     }
 
     this.size = contents.length;
-    await fs.writeFile(this.bundle.name, contents);
+
+    // Fix bundleName
+    for (let key in asset.generated) {
+      let mat;
+      if (typeof asset.generated[key] === 'string' && (mat = asset.generated[
+          key].match(patt))) {
+        bundleName = bundleName.replace(path.basename(bundleName), mat[0]);
+        break;
+      }
+    }
+
+    await fs.writeFile(bundleName, contents);
+
   }
 
   getSize() {
