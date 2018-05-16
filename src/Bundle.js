@@ -20,6 +20,7 @@ class Bundle {
     this.offsets = new Map();
     this.totalSize = 0;
     this.bundleTime = 0;
+    this.timestamp = new Date().getTime();
   }
 
   static createWithAsset(asset, parentBundle) {
@@ -141,7 +142,7 @@ class Bundle {
     }
 
     // Add the content hash and extension.
-    return name + '.' + hash + ext;
+    return name + '.' + hash + '-' + this.timestamp + ext;
   }
 
   async package(bundler, oldHashes, newHashes = new Map()) {
